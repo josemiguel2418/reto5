@@ -74,14 +74,23 @@ while ejecutar:
     print("5.Salir")
     eleccion = input("Elige una opcion:")
     if eleccion == '1':
-        nombre = input("Nombre: ")
-        telefono = input("Teléfono: ")
-        email = input("Email: ")
+        nombre = input("Nombre: ").strip()
+        telefono = input("Teléfono: ").strip()
+        email = input("Email: ").strip()
+        if nombre == "" or telefono == "" or email == "":
+            print("Todos los campos son obligatorios")
+            continue
+        if not telefono.isdigit():
+            print("El teléfono debe contener solo números")
+            continue
+        if "@" not in email or "." not in email:
+            print("El email no es válido")
+            continue
         agregar_contacto(nombre, telefono, email)
         print("Contacto agregado")
     
-    if eleccion == '2':
-        nombre_buscar = input("Nombre a buscar: ")
+    elif eleccion == '2':
+        nombre_buscar = input("Nombre a buscar: ").strip()
         contactos = obtener_contactos(nombre_buscar)
         if contactos:
             for contacto in contactos:
@@ -89,33 +98,60 @@ while ejecutar:
         else:
             print("No se encontraron contactos.")
 
-    if eleccion == '3':
-        nombre_buscar = input("Nombre del contacto a actualizar: ")
+    elif eleccion == '3':
+        nombre_buscar = input("Nombre del contacto a actualizar: ").strip()
         contactos = obtener_contactos(nombre_buscar)
         if contactos:
             for indice, contacto in enumerate(contactos):
                 print(f"{indice+1}. Nombre: {contacto['nombre']}, Teléfono: {contacto['telefono']}, Email: {contacto['email']}")
-            opcion = int(input("Elige el número del contacto a actualizar: ")) - 1
+            try:
+                opcion = int(input("Elige el número del contacto a actualizar: ")) - 1
+            except ValueError:
+                print("Debes introducir un número")
+                continue
+            if opcion < 0 or opcion >= len(contactos):
+                print("Opción inválida")
+                continue
             contacto = contactos[opcion]
-            nuevo_nombre = input("Nuevo nombre: ")
-            nuevo_telefono = input("Nuevo teléfono: ")
-            nuevo_email = input("Nuevo email: ")
+            nuevo_nombre = input("Nuevo nombre: ").strip()
+            nuevo_telefono = input("Nuevo teléfono: ").strip()
+            nuevo_email = input("Nuevo email: ").strip()
+
+            if nuevo_nombre == "" or nuevo_telefono == "" or nuevo_email == "":
+                print("Todos los campos son obligatorios")
+                continue
+            
+            if not nuevo_telefono.isdigit():
+                print("El teléfono debe contener solo números")
+                continue
+            if "@" not in nuevo_email or "." not in nuevo_email:
+                print("El email no es válido")
+                continue
+
             actualizar_contacto(contacto["id"], nuevo_nombre, nuevo_telefono, nuevo_email)
             print("Contacto actualizado")
         else:
             print("No se encontraron contactos.")
-    if eleccion == '4':
-        nombre_buscar = input("Nombre del contacto a eliminar: ")
+    elif eleccion == '4':
+        nombre_buscar = input("Nombre del contacto a eliminar: ").strip()
         contactos = obtener_contactos(nombre_buscar)
         if contactos:
             for indice, contacto in enumerate(contactos):
                 print(f"{indice+1}. Nombre: {contacto['nombre']}, Teléfono: {contacto['telefono']}, Email: {contacto['email']}")
-            opcion = int(input("Elige el número del contacto a eliminar: ")) - 1
+            try:
+                opcion = int(input("Elige el número del contacto a eliminar: ")) - 1
+            except ValueError:
+                print("Debes introducir un número")
+                continue
+            if opcion < 0 or opcion >= len(contactos):
+                print("Opcion inválida")
+                continue
             contacto = contactos[opcion]
             borrar_contacto(contacto["id"])
             print("Contacto borrado")
         else:
             print("No se encontraron contactos.")
-    if eleccion == '5':
+    elif eleccion == '5':
         ejecutar = False
-    
+    else:
+        print("Opcion invalida")
